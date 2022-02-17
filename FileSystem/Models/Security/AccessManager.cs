@@ -11,7 +11,7 @@ namespace FileSystem.models.Security
         {
             var userAccessGroups = FileSystem.Session.User.RightGroups.Split('/');
             var accessList = dir.AccessList.Where(group => Array.Exists(userAccessGroups, el => el == group.GroupName) );
-            var directoryAccess = accessList.ToList().Find(group => group.Rights.Split("").ToList().Find(access => access == right) != null);
+            var directoryAccess = accessList.ToList().Find(group => group.Rights.ToList().Find(access => access == right.ToCharArray()[0]) != null);
             return directoryAccess != null;
         }
         
@@ -19,7 +19,7 @@ namespace FileSystem.models.Security
         {
             var userAccessGroups = FileSystem.Session.User.RightGroups.Split('/');
             var accessList = file.AccessList.Where(group => Array.Exists(userAccessGroups, el => el == group.GroupName) );
-            var directoryAccess = accessList.ToList().Find(group => group.Rights.Split("").ToList().Find(access => access == right) != null);
+            var directoryAccess = accessList.ToList().Find(group => group.Rights.ToList().Find(access => access == right.ToCharArray()[0]) != null);
             return directoryAccess != null;
         }
         

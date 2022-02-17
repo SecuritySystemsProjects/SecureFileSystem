@@ -48,8 +48,13 @@ namespace FileSystem.models
             NormalizeDirectories(Directory);
             RootDir = Directory;
             OsFile = path;
+            FileSystemBlocker();
         }
-
+        
+        public void FileSystemBlocker()
+        {
+            var file = new FileStream(OsFile, FileMode.Open);
+        }
         public void UseSecurity(Func<FileSystem, SecurityProvider> func)
         {
             SecurityProvider = func(this);
@@ -59,7 +64,7 @@ namespace FileSystem.models
         {
             if (!IsUserLoggedIn)
             {
-                var sCodeTimer = new Timer(_ => CheckSecretCode(IsUserLoggedIn), null, 0, 15000);
+                var sCodeTimer = new Timer(_ => CheckSecretCode(IsUserLoggedIn), null, 0, 15000000);
                 while (!IsUserLoggedIn)
                 {
                     var uCread = SecurityProvider.PasswordManager.GetUserCredentials();
@@ -85,6 +90,7 @@ namespace FileSystem.models
         {
             Session = null;
             IsUserLoggedIn = false;
+            Directory = RootDir;
             Console.WriteLine("Logout was successful!");
             EnsureUserLoggedIn();
         }
